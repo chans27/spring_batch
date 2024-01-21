@@ -1,4 +1,4 @@
-package com.example.SpringBatchTutorial.job.HelloWorld;
+package com.example.SpringBatchTutorial.job.MailSender;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,17 +14,24 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
-/**
- * desc: tasklet을 활용하여 Hello World를 출력
- * run: --spring.batch.job.names=helloWorldJob
- */
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.io.File;
+import java.util.Properties;
+
 @Configuration
 @RequiredArgsConstructor
 @Slf4j
-public class HelloWorldJobConfig {
+public class MailSenderConfig {
+
+    private final JavaMailSender mailSender;
 
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
@@ -32,37 +39,44 @@ public class HelloWorldJobConfig {
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
+    //참고2
+    public void sendEmailWithAttachment(String receiverEmail, String subject, String body) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-    /**
-     * 1. make a Job
-     */
+        helper.setTo(receiverEmail);
+        helper.setSubject(subject);
+        helper.setText(body);
+
+        mailSender.send(message);
+    }
+
     @Bean
-    public Job helloWorldJob() {
-        return jobBuilderFactory.get("helloWorldJob")
+    public Job mailSenderJob(Step mailSenderStep) {
+        log.info("mailSenderJob 실행");
+        return jobBuilderFactory.get("mailSenderJob")
                 .incrementer(new RunIdIncrementer())
-                .start(helloWorldStep())
+                .start(mailSenderStep)
                 .build();
     }
 
-    /**
-     * 2. Make a Step
-     */
     @JobScope
     @Bean
-    public Step helloWorldStep() {
-        return stepBuilderFactory.get("helloWorldStep")
-                .tasklet(helloWorldTasklet())
+    public Step mailSenderStep(Tasklet mailSenderTasklet) {
+        log.info("mailSender 스텝 실행");
+        return stepBuilderFactory.get("mailSenderStep")
+                .tasklet(mailSenderTasklet)
                 .build();
     }
 
     @StepScope
     @Bean
-    public Tasklet helloWorldTasklet() {
+    public Tasklet mailSenderTasklet() {
+        log.info("mailSender Tasklet 실행");
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-//                System.out.println("Hello World Spring Batch!!");
-                log.info("helloWorldJob 실행하기");
+                sendEmailWithAttachment("everever1275@gmail.com", "제목입니다", "내용입니다");
                 return RepeatStatus.FINISHED;
             }
         };
