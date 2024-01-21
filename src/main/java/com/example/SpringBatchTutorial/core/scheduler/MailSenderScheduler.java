@@ -24,7 +24,7 @@ public class MailSenderScheduler {
     private JobLauncher jobLauncher;
 
 //    @Scheduled(cron = "* * * * * * ")
-    @Scheduled(cron = "0 48 23 21 1 0")
+//    @Scheduled(cron = "0 48 23 21 1 0")
     public void mailSenderJobRun() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
 
         JobParameters jobParameters = new JobParameters(
