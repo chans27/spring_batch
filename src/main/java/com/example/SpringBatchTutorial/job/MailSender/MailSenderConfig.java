@@ -76,7 +76,7 @@ public class MailSenderConfig {
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                sendEmailWithAttachment("everever1275@gmail.com", "제목입니다", "내용입니다");
+                sendEmailWithAttachment("everever1275@gmail.com", "이메일 제목", "이메일 내용");
                 return RepeatStatus.FINISHED;
             }
         };
