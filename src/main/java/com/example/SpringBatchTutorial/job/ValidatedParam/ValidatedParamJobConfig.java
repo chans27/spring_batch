@@ -43,11 +43,11 @@ public class ValidatedParamJobConfig {
      */
     @Bean
     public Job validatedParamJob(Step validatedParamStep) {
-        log.info("잡 메서드 실행");
+//        log.info("잡 메서드 실행");
         return jobBuilderFactory.get("validatedParamJob")
                 .incrementer(new RunIdIncrementer())
-//                .validator(new FileParamValidator()) // 단일 발리데이터
-                .validator(multipleValidator())
+                .validator(new FileParamValidator()) // 단일 발리데이터
+//                .validator(multipleValidator())
                 .start((validatedParamStep))
                 .build();
     }
@@ -66,7 +66,7 @@ public class ValidatedParamJobConfig {
     @JobScope
     @Bean
     public Step validatedParamStep(Tasklet validatedParamTasklet) {
-        log.info("스텝 메서드 실행");
+//        log.info("스텝 메서드 실행");
         return stepBuilderFactory.get("validatedParamStep")
                 .tasklet(validatedParamTasklet)
                 .build();
@@ -78,8 +78,8 @@ public class ValidatedParamJobConfig {
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                System.out.println(fileName);
-                System.out.println("validated Param Tasklet");
+                log.info("fileName={}", fileName);
+                log.info("validated Param Tasklet");
                 return RepeatStatus.FINISHED;
             }
         };
