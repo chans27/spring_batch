@@ -14,7 +14,7 @@ spring:
   batch:
     job:
       names: ${job.name:NONE}
-      enabled: false # 파라미터가 있더라도 실행하지 않도록 설정
+#      enabled: false # 파라미터가 있더라도 실행하지 않도록 설정
     jdbc:
       initialize-schema: always
   datasource:

@@ -21,17 +21,21 @@ public class MailSenderScheduler {
     private Job mailSenderJob;
 
     @Autowired
+    private Job mailSenderDbJob;
+
+    @Autowired
     private JobLauncher jobLauncher;
 
+    //초 분 시 일 월 주
 //    @Scheduled(cron = "* * * * * * ")
-//    @Scheduled(cron = "0 48 23 21 1 0")
-    public void mailSenderJobRun() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+    @Scheduled(cron = "*/3 * * * * *")
+    public void mailSenderJobDbRun() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
 
         JobParameters jobParameters = new JobParameters(
                 Collections.singletonMap("requestTime", new JobParameter(System.currentTimeMillis()))
         );
 
-        jobLauncher.run(mailSenderJob, jobParameters);
+        jobLauncher.run(mailSenderDbJob, jobParameters);
     }
 
 }

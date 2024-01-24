@@ -39,17 +39,6 @@ public class MailSenderConfig {
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
-    //참고2
-    public void sendEmailWithAttachment(String receiverEmail, String subject, String body) throws MessagingException {
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-        helper.setTo(receiverEmail);
-        helper.setSubject(subject);
-        helper.setText(body);
-
-        mailSender.send(message);
-    }
 
     @Bean
     public Job mailSenderJob(Step mailSenderStep) {
@@ -80,6 +69,18 @@ public class MailSenderConfig {
                 return RepeatStatus.FINISHED;
             }
         };
+    }
+
+    //참고2
+    public void sendEmailWithAttachment(String receiverEmail, String subject, String body) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setTo(receiverEmail); //
+        helper.setSubject(subject);
+        helper.setText(body);
+
+        mailSender.send(message);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.example.SpringBatchTutorial.core.scheduler;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
@@ -16,25 +15,21 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 
 @Component
-@Slf4j
-public class SampleScheduler {
+public class ValidatedParamScheduler {
 
     @Autowired
-    private Job helloWorldJob;
+    private Job validatedParamJob;
 
     @Autowired
     private JobLauncher jobLauncher;
 
     @Scheduled(cron = "*/3 * * * * * ")
-    public void helloWorldJobRun() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+    public void validatedParamJobRun() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
 
         JobParameters jobParameters = new JobParameters(
-                Collections.singletonMap("requestTime", new JobParameter(System.currentTimeMillis()))
+                Collections.singletonMap("validatedParamJob", new JobParameter(System.currentTimeMillis()))
         );
 
-//        String requestTime = jobParameters.getString("requestTime");
-//        log.info("requestTime={}", requestTime);
-
-//        jobLauncher.run(helloWorldJob, jobParameters);
+//        jobLauncher.run(validatedParamJob, jobParameters);
     }
 }
