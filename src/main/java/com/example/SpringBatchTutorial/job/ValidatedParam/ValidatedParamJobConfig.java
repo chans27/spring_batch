@@ -78,8 +78,8 @@ public class ValidatedParamJobConfig {
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                log.info("fileName={}", fileName);
-                log.info("validated Param Tasklet");
+//                log.info("fileName={}", fileName);
+//                log.info("validated Param Tasklet");
                 return RepeatStatus.FINISHED;
             }
         };
