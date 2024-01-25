@@ -28,4 +28,7 @@ public class MailHistory {
 
     @CreationTimestamp
     private LocalDateTime date;
+
+    private String email;
+
 }
