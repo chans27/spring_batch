@@ -32,8 +32,8 @@ public class User {
         LocalDateTime lastLoginTime = getLast_login();
 
 //        if (lastLoginTime != null && ChronoUnit.DAYS.between(lastLoginTime, currentTime) >= 30) {
-        if (lastLoginTime != null && ChronoUnit.MINUTES.between(lastLoginTime, currentTime) >= 3) {
-            setStatus(1); //
+        if (lastLoginTime != null && ChronoUnit.MINUTES.between(lastLoginTime, currentTime) >= 5) {
+            setStatus(1); //비활성화
         }
     }
 
