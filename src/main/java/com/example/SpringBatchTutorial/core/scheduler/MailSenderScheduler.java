@@ -26,7 +26,7 @@ public class MailSenderScheduler {
     @Autowired
     private JobLauncher jobLauncher;
 
-    //초 분 시 일 월 주
+    //second minute hour day month week
 //    @Scheduled(cron = "* * * * * * ")
     @Scheduled(cron = "*/3 * * * * *")
     public void mailSenderJobDbRun() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {

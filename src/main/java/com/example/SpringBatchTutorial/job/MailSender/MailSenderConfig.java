@@ -14,17 +14,13 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.util.Properties;
 
 @Configuration
 @RequiredArgsConstructor
@@ -42,7 +38,6 @@ public class MailSenderConfig {
 
     @Bean
     public Job mailSenderJob(Step mailSenderStep) {
-        log.info("mailSenderJob 실행");
         return jobBuilderFactory.get("mailSenderJob")
                 .incrementer(new RunIdIncrementer())
                 .start(mailSenderStep)
@@ -52,7 +47,6 @@ public class MailSenderConfig {
     @JobScope
     @Bean
     public Step mailSenderStep(Tasklet mailSenderTasklet) {
-        log.info("mailSender 스텝 실행");
         return stepBuilderFactory.get("mailSenderStep")
                 .tasklet(mailSenderTasklet)
                 .build();
@@ -61,11 +55,10 @@ public class MailSenderConfig {
     @StepScope
     @Bean
     public Tasklet mailSenderTasklet() {
-        log.info("mailSender Tasklet 실행");
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                sendEmailWithAttachment("everever1275@gmail.com", "이메일 제목", "이메일 내용");
+                sendEmailWithAttachment("everever1275@gmail.com", "mail subject", "mail text");
                 return RepeatStatus.FINISHED;
             }
         };

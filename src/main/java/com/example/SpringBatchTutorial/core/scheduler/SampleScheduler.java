@@ -32,9 +32,6 @@ public class SampleScheduler {
                 Collections.singletonMap("requestTime", new JobParameter(System.currentTimeMillis()))
         );
 
-//        String requestTime = jobParameters.getString("requestTime");
-//        log.info("requestTime={}", requestTime);
-
 //        jobLauncher.run(helloWorldJob, jobParameters);
     }
 }

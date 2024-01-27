@@ -1,12 +1,13 @@
 package com.example.SpringBatchTutorial.core.domain.mailSender;
 
-import lombok.*;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.PostLoad;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -32,8 +33,10 @@ public class User {
         LocalDateTime lastLoginTime = getLast_login();
 
 //        if (lastLoginTime != null && ChronoUnit.DAYS.between(lastLoginTime, currentTime) >= 30) {
-        if (lastLoginTime != null && ChronoUnit.MINUTES.between(lastLoginTime, currentTime) >= 5) {
+        if (lastLoginTime != null && ChronoUnit.MINUTES.between(lastLoginTime, currentTime) >= 3) {
             setStatus(1); //비활성화
+        } else {
+            setStatus(0);
         }
     }
 

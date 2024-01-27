@@ -51,9 +51,10 @@ public class MailSenderDbConfig {
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
+
+
     @Bean
     public Job mailSenderDbJob(Step mailSenderDbStep) {
-        log.info("mailSenderDbJob 실행");
         return jobBuilderFactory.get("mailSenderDbJob")
                 .incrementer(new RunIdIncrementer())
                 .start(mailSenderDbStep)
@@ -78,7 +79,6 @@ public class MailSenderDbConfig {
     @StepScope
     @Bean
     public RepositoryItemReader<User> mailSenderReader() {
-        log.info("메일센더리더 실행 ");
         return new RepositoryItemReaderBuilder<User>()
                 .name("mailSenderReader")
                 .repository(userRepository)
@@ -92,44 +92,33 @@ public class MailSenderDbConfig {
     @StepScope
     @Bean
     public ItemProcessor<User, MailHistory> mailSenderProcessor() {
-        log.info("메일센더프로세서 실행");
         return new ItemProcessor<User, MailHistory>() {
             @Override
             public MailHistory process(User user) throws Exception {
 
-                /**
-                 * userCheck메서드에서 user의 데이터를 하나씩 넘긴다.
-                 * 1.
-                 * 2. user의 최종로그인 시간이 현재시간에서 3분이 지난상태라면,user의 status를 1로 바꾼다.
-                 * 3. user의 이메일이 네이버로 시작한다면, 메일을 보내지 않는다.
-                 */
-                if (userCheck(user)) return null;
+                if (userLoginCheck(user)) return null;
 
                 MimeMessage message = mailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
                 helper.setTo(user.getEmail());
-                helper.setSubject("배치예시");
-                helper.setText("예시 본문입니다.");
-
+                helper.setSubject("example subject");
+                helper.setText("example text");
 
                 File attachment = new File("mailAttachment.txt");
                 helper.addAttachment(attachment.getName(), attachment);
 
-//                mailSender.send(message);
-
-
+                mailSender.send(message);
 
                 int count = (mailHistoryRepository.findAll().size()) + 1;
 
-                //성공시
                 MailHistory result = MailHistory.builder()
                         .result("0")
                         .count(count)
                         .email(user.getEmail())
                         .build();
 
-                log.info("전송완료");
+                log.info("Send Success");
                 return result;
 
             }
@@ -141,31 +130,25 @@ public class MailSenderDbConfig {
     @StepScope
     @Bean
     public ItemWriter<MailHistory> mailSenderWriter() {
-        log.info("메일센더라이터 실행");
         return new ItemWriter<MailHistory>() {
             @Override
             public void write(List<? extends MailHistory> items) throws Exception {
-//                items.forEach(item -> mailHistoryRepository.save(item));
+                items.forEach(item -> mailHistoryRepository.save(item));
             }
         };
     }
 
-    private boolean userCheck(User user) {
-        User updatedUser = userRepository.findByEmail(user.getEmail());
+    private boolean userLoginCheck(User user) {
+            user.updateStatus();
 
-            //유저에게 마지막으로 보낸 메일의 시간확인. 오래됐으면 해당 user를 비활성화로 바꾼다.
-            updatedUser.updateStatus();
+        if (user.getStatus() == 0) {
 
-        if (updatedUser.getStatus() == 0) {
-            log.info("updatedUser 실행");
-
-            //이메일이 네이버로 시작하는 경우 메일을 보내지 않음
             if (user.getEmail().endsWith("@naver.com")) {
                 return true;
             }
 
-            updatedUser.setLast_login(LocalDateTime.now());
-            userRepository.save(updatedUser);
+            user.setLast_login(LocalDateTime.now());
+            userRepository.save(user);
         }
         return false;
     }
