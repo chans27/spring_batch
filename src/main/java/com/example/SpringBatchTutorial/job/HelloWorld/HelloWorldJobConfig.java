@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * desc: tasklet을 활용하여 Hello World를 출력
  * run: --spring.batch.job.names=helloWorldJob
  */
 @Configuration
@@ -61,8 +60,7 @@ public class HelloWorldJobConfig {
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-//                System.out.println("Hello World Spring Batch!!");
-                log.info("helloWorldJob 실행하기");
+                log.info("helloWorldJob run");
                 return RepeatStatus.FINISHED;
             }
         };

@@ -23,7 +23,6 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 
 /**
- * desc: 파일 이름 파라미터 전달 및 검증
  * run: --spring.batch.job.names=validatedParamJob -fileName=test.csv
  */
 @Configuration
@@ -43,7 +42,6 @@ public class ValidatedParamJobConfig {
      */
     @Bean
     public Job validatedParamJob(Step validatedParamStep) {
-//        log.info("잡 메서드 실행");
         return jobBuilderFactory.get("validatedParamJob")
                 .incrementer(new RunIdIncrementer())
                 .validator(new FileParamValidator()) // 단일 발리데이터
@@ -52,7 +50,6 @@ public class ValidatedParamJobConfig {
                 .build();
     }
 
-    // 다수의 발리데이터 등록 가능
     private CompositeJobParametersValidator multipleValidator() {
         CompositeJobParametersValidator validator = new CompositeJobParametersValidator();
         validator.setValidators(Arrays.asList(new FileParamValidator()));
@@ -66,7 +63,6 @@ public class ValidatedParamJobConfig {
     @JobScope
     @Bean
     public Step validatedParamStep(Tasklet validatedParamTasklet) {
-//        log.info("스텝 메서드 실행");
         return stepBuilderFactory.get("validatedParamStep")
                 .tasklet(validatedParamTasklet)
                 .build();
@@ -78,8 +74,6 @@ public class ValidatedParamJobConfig {
         return new Tasklet() {
             @Override
             public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-//                log.info("fileName={}", fileName);
-//                log.info("validated Param Tasklet");
                 return RepeatStatus.FINISHED;
             }
         };
